@@ -1,20 +1,15 @@
 class Solution {
     public int fib(int n) {
-        if (n == 0) {
+
+        if (n < 1) {
             return 0;
         }
-        if (n <= 2) {
-            return 1;
+        int a = 0, b = 1;
+        while (n-- > 1) {
+            int sum = a + b;
+            a = b;
+            b = sum;
         }
-        
-        int prev = 1;
-        int predPrev = 1;
-        int current = 0;
-        for (int i = 3; i <= n ; i++) {
-            current = prev + predPrev;
-            predPrev = prev;
-            prev = current;
-        }
-            return current;
+        return b;
     }
 }
