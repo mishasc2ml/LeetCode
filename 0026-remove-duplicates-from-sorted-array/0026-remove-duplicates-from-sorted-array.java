@@ -8,6 +8,6 @@ class Solution {
                 k++;
             }
         }
-            return k;
+        return k;
     }
 }
