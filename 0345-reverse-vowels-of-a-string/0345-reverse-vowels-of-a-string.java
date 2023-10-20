@@ -1,26 +1,34 @@
 class Solution {
     public String reverseVowels(String s) {
         int start = 0, end = s.length() - 1;
-        String vowels = "aeiou";
-        String[] strs = s.split("");
+        Set<Character> vowels = new HashSet<Character>();
+        vowels.add('a');
+        vowels.add('e');
+        vowels.add('i');
+        vowels.add('o');
+        vowels.add('u');
+        vowels.add('A');
+        vowels.add('E');
+        vowels.add('I');
+        vowels.add('O');
+        vowels.add('U');
+        char[] chars = s.toCharArray();
         while (start < end) {
-            //System.out.println(start);
-            //System.out.println(end);
-            if (vowels.contains(strs[start].toLowerCase()) && vowels.contains(strs[end].toLowerCase())) {
-                String tmp = strs[start];
-                strs[start] = strs[end];
-                strs[end] = tmp;
+            if (vowels.contains(chars[start]) && vowels.contains(chars[end])) {
+                char tmp = chars[start];
+                chars[start] = chars[end];
+                chars[end] = tmp;
                 start++;
                 end--;
-            } else if (!vowels.contains(strs[start].toLowerCase()) && vowels.contains(strs[end].toLowerCase())) {
+            } else if (!vowels.contains(chars[start]) && vowels.contains(chars[end])) {
                 start++;
-            } else if (vowels.contains(strs[start].toLowerCase()) && !vowels.contains(strs[end].toLowerCase())) {
+            } else if (vowels.contains(chars[start]) && !vowels.contains(chars[end])) {
                 end--;
-            } else if (!vowels.contains(strs[start].toLowerCase()) && !vowels.contains(strs[end].toLowerCase())) {
+            } else if (!vowels.contains(chars[start]) && !vowels.contains(chars[end])) {
                 start++;
                 end--;
             }
         }
-            return Arrays.stream(strs).collect(Collectors.joining(""));
+            return new String(chars);
     }
 }
