@@ -25,33 +25,28 @@ class Foo {
     public void second(Runnable printSecond) throws InterruptedException {
         lock.lock();
         try {
-            while (true) {
-                if (firstDone) {
-                    // printSecond.run() outputs "second". Do not change or remove this line.
-                    printSecond.run();
-                    secondDone = true;
-                    isSecondPrinted.signal();
-                    break;
-                }
-                isFirstPrinted.await();
+            while (!firstDone) {
+                isFirstPrinted.await();   
             }
-        } finally {
+            // printSecond.run() outputs "second". Do not change or remove this line.
+            printSecond.run();
+            secondDone = true;
+            isSecondPrinted.signal();
+        }finally {
             lock.unlock();
-        }
+    }
     }
 
     public void third(Runnable printThird) throws InterruptedException {
         lock.lock();
+        
         try {
-            while (true) {
-                if (secondDone) {
-                    // printThird.run() outputs "third". Do not change or remove this line.
-                    printThird.run();
-                    break;
-                }
+            while (!secondDone) {
                 isSecondPrinted.await();
             }
-        } finally {
+            // printThird.run() outputs "third". Do not change or remove this line.
+            printThird.run();
+        }finally {
             lock.unlock();
         }
     }
