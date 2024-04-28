@@ -1,47 +1,58 @@
 class Foo {
     
-    private Object mutex = new Object();
-    private AtomicBoolean isFirstPrinted = new AtomicBoolean(false);
-    private AtomicBoolean isSecondPrinted = new AtomicBoolean(false);
+    private Lock lock = new ReentrantLock();
+    private Condition isFirstPrinted  = lock.newCondition(); 
+    private Condition isSecondPrinted = lock.newCondition();
+    private boolean firstDone = false;
+    private boolean secondDone = false;
 
     public Foo() {
         
     }
 
     public void first(Runnable printFirst) throws InterruptedException {
-        synchronized(mutex) {
+        lock.lock();
+        try {
             // printFirst.run() outputs "first". Do not change or remove this line.
             printFirst.run();
-            isFirstPrinted.getAndSet(true);
-            mutex.notifyAll();
+            firstDone = true;
+            isFirstPrinted.signal();
+        } finally {
+            lock.unlock();
         }
     }
 
     public void second(Runnable printSecond) throws InterruptedException {
-        synchronized(mutex) {
+        lock.lock();
+        try {
             while (true) {
-                if (isFirstPrinted.get() == true) {
+                if (firstDone) {
                     // printSecond.run() outputs "second". Do not change or remove this line.
                     printSecond.run();
-                    isSecondPrinted.getAndSet(true);
-                    mutex.notifyAll();
+                    secondDone = true;
+                    isSecondPrinted.signal();
                     break;
                 }
-            mutex.wait();
+                isFirstPrinted.await();
             }
+        } finally {
+            lock.unlock();
         }
     }
 
     public void third(Runnable printThird) throws InterruptedException {
-        synchronized(mutex) {
+        lock.lock();
+        try {
             while (true) {
-                if (isSecondPrinted.get() == true) {
+                if (secondDone) {
                     // printThird.run() outputs "third". Do not change or remove this line.
-                    printThird.run();  
+                    printThird.run();
                     break;
                 }
-                mutex.wait();
+                isSecondPrinted.await();
             }
+        } finally {
+            lock.unlock();
         }
     }
 }
