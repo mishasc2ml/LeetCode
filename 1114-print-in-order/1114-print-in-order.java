@@ -1,53 +1,29 @@
 class Foo {
-    
-    private Lock lock = new ReentrantLock();
-    private Condition isFirstPrinted  = lock.newCondition(); 
-    private Condition isSecondPrinted = lock.newCondition();
-    private boolean firstDone = false;
-    private boolean secondDone = false;
 
+    private final Semaphore s2;
+    private final Semaphore s3;
+    
     public Foo() {
-        
+        s2 = new Semaphore(0);
+        s3 = new Semaphore(0);
     }
 
     public void first(Runnable printFirst) throws InterruptedException {
-        lock.lock();
-        try {
-            // printFirst.run() outputs "first". Do not change or remove this line.
-            printFirst.run();
-            firstDone = true;
-            isFirstPrinted.signal();
-        } finally {
-            lock.unlock();
-        }
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        s2.release();
     }
 
     public void second(Runnable printSecond) throws InterruptedException {
-        lock.lock();
-        try {
-            while (!firstDone) {
-                isFirstPrinted.await();   
-            }
-            // printSecond.run() outputs "second". Do not change or remove this line.
-            printSecond.run();
-            secondDone = true;
-            isSecondPrinted.signal();
-        }finally {
-            lock.unlock();
-    }
+        s2.acquire();
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        s3.release();
     }
 
     public void third(Runnable printThird) throws InterruptedException {
-        lock.lock();
-        
-        try {
-            while (!secondDone) {
-                isSecondPrinted.await();
-            }
-            // printThird.run() outputs "third". Do not change or remove this line.
-            printThird.run();
-        }finally {
-            lock.unlock();
-        }
+        s3.acquire();
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
     }
 }
