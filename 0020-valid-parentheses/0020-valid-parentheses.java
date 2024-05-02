@@ -9,7 +9,7 @@ class Solution {
             } else if ((cur == ')' && stack.peek() == '(') || (cur == ']' && stack.peek() == '[') || (cur == '}' && stack.peek() == '{')){
                 stack.pop();
             } else {
-                stack.push(cur);
+                return false;
             }
         }
         return stack.isEmpty();
