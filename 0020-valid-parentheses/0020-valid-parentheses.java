@@ -1,19 +1,17 @@
 class Solution {
     public boolean isValid(String s) {
-        if (s.length() <= 1) {
-            return false;
-        }
-        Deque<Character> qq = new ArrayDeque<>();
+        Stack<Character> stack = new Stack<>();
+        
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(' || s.charAt(i) == '[' || s.charAt(i) == '{') {
-                qq.addLast(s.charAt(i));
-            } else if (!qq.isEmpty() && ((qq.peekLast() == '{' && s.charAt(i) == '}') || (qq.peekLast() == '(' && s.charAt(i) == ')') ||
-                                        (qq.peekLast() == '[' && s.charAt(i) == ']'))) {
-                qq.removeLast();
+            char cur = s.charAt(i);
+            if (cur == '(' || cur == '[' || cur == '{' || stack.size() == 0) {
+                stack.push(cur);
+            } else if ((cur == ')' && stack.peek() == '(') || (cur == ']' && stack.peek() == '[') || (cur == '}' && stack.peek() == '{')){
+                stack.pop();
             } else {
-                return false;
-            }   
+                stack.push(cur);
+            }
         }
-        return qq.isEmpty();
+        return stack.isEmpty();
     }
 }
