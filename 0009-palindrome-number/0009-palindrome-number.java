@@ -1,18 +1,11 @@
 class Solution {
     public boolean isPalindrome(int x) {
-        
-        if (x < 0 || (x % 10 == 0 && x != 0)) {
-            return false;
+        if (x < 0) return false;
+        String res = "";
+        String digit = String.valueOf(x);
+        for (int i = digit.length() - 1; i >= 0; i--) {
+            res += digit.charAt(i);
         }
-
-        int reversed = 0;
-        while (x > reversed) {
-            int last = x % 10;
-            x /= 10;
-            reversed = reversed * 10 + last;
-        }
-        
-        
-        return x == reversed || x == reversed / 10; 
+        return res.equals(digit);
     }
 }
