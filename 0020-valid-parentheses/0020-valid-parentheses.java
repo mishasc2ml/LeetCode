@@ -3,10 +3,9 @@ class Solution {
         Stack<Character> stack = new Stack<>();
         
         for (int i = 0; i < s.length(); i++) {
-            char cur = s.charAt(i);
-            if (cur == '(' || cur == '[' || cur == '{' || stack.size() == 0) {
-                stack.push(cur);
-            } else if ((cur == ')' && stack.peek() == '(') || (cur == ']' && stack.peek() == '[') || (cur == '}' && stack.peek() == '{')){
+            if (s.charAt(i) == '(' || s.charAt(i) == '[' || s.charAt(i) == '{' || stack.isEmpty()) {
+                stack.push(s.charAt(i));
+            } else if ((s.charAt(i) == ')' && stack.peek() == '(') || (s.charAt(i) == ']' && stack.peek() == '[') || (s.charAt(i) == '}' && stack.peek() == '{')) {
                 stack.pop();
             } else {
                 return false;
